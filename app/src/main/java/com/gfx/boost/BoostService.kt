@@ -60,13 +60,16 @@ class BoostService : Service() {
         val dm = DisplayMetrics()
         @Suppress("DEPRECATION")
         manager.defaultDisplay.getRealMetrics(dm)
-        val w = dm.widthPixels
-        val h = dm.heightPixels
+        val fw = dm.widthPixels
+        val fh = dm.heightPixels
+        val w = fw / 2
+        val h = fh / 2
         val dpi = dm.densityDpi
 
         val sv = SurfaceView(this)
         sv.setZOrderOnTop(true)
         sv.holder.setFormat(PixelFormat.TRANSLUCENT)
+        sv.holder.setFixedSize(w, h)
         sv.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 val r = GlRenderer(holder.surface, w, h) { input ->
@@ -89,7 +92,7 @@ class BoostService : Service() {
         overlay = sv
 
         val lp = WindowManager.LayoutParams(
-            w, h,
+            fw, fh,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
